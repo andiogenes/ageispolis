@@ -7,11 +7,11 @@ class Node<A>(
     /**
      * Мощность входящих портов.
      */
-    private val inCapacity: Int,
+    inCapacity: Int,
     /**
      * Мощность выходящих портов.
      */
-    private val outCapacity: Int = 1,
+    outCapacity: Int = 1,
     /**
      * Вычислительная работа узла.
      */
