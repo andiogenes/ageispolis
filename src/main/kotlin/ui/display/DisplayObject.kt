@@ -11,16 +11,31 @@ abstract class DisplayObject(private var parent: DisplayObject? = null) : EventD
     init { DisplayObjectManager.addObject(this) }
 
     /**
-     * Координата x объекта.
+     * Координата x объекта (относительно родителя).
      */
     var x: Int = 0
 
     /**
-     * Координата y объекта.
+     * Координата y объекта (относительно родителя).
      */
     var y: Int = 0
 
-    fun setParent(obj: DisplayObject?) {
+    /**
+     * Абсолютная координата x объекта.
+     */
+    val absoluteX: Int
+        get() = (parent?.x ?: 0) + x
+
+    /**
+     * Абсолютная координата y объекта.
+     */
+    val absoluteY: Int
+        get() = (parent?.y ?: 0) + y
+
+    /**
+     * Присоединяет родителя к объекту.
+     */
+    fun assignParent(obj: DisplayObject?) {
         this.parent = obj
     }
 

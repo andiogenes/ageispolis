@@ -10,7 +10,7 @@ abstract class DisplayObjectContainer(parent: DisplayObject? = null) : DisplayOb
      * Добавляет дочерний объект.
      */
     fun addChild(child: DisplayObject): Boolean {
-        child.setParent(this)
+        child.assignParent(this)
         return children.add(child)
     }
 
@@ -18,7 +18,7 @@ abstract class DisplayObjectContainer(parent: DisplayObject? = null) : DisplayOb
      * Удаляет дочерний объект.
      */
     fun removeChild(child: DisplayObject): Boolean {
-        child.setParent(null)
+        child.assignParent(null)
         return children.remove(child)
     }
 }
