@@ -50,7 +50,7 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-par::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 
-    api "org.jetbrains.skija:skija-linux:0.6.10"
+    api "org.jetbrains.skija:skija-linux:0.6.61"
 }
 
 compileKotlin {
