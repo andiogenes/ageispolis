@@ -16,14 +16,18 @@ class CoreScreen(private val root: DisplayObject) : Screen {
     }
 
     override fun onMouseButton(button: Int, action: Int, mods: Int) {
-        DisplayObjectManager.objects.asReversed().forEach { it.onMouseButton(x, y, button, action, mods) }
+        DisplayObjectManager.objects.asReversed().forEach {
+            if (it.onMouseButton(x, y, button, action, mods)) return
+        }
     }
 
     override fun onCursor(x: Int, y: Int) {
         this.x = x
         this.y = y
 
-        DisplayObjectManager.objects.asReversed().forEach { it.onMouseMove(x, y) }
+        DisplayObjectManager.objects.asReversed().forEach {
+            if (it.onMouseMove(x, y)) return
+        }
     }
 
     override fun onWindowSize(width: Int, height: Int) {}

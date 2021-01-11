@@ -2,6 +2,7 @@ package ui.components
 
 import org.jetbrains.skija.Canvas
 import org.jetbrains.skija.Paint
+import org.lwjgl.glfw.GLFW
 import ui.display.DisplayObjectContainer
 
 class Root : DisplayObjectContainer() {
@@ -10,6 +11,31 @@ class Root : DisplayObjectContainer() {
             x = 10
             y = 10
         })
+    }
+
+    private val contextMenu = ContextMenu(listOf("Overdrive", "Delay", "Chorus").map { ContextMenu.MenuItem(it) { println(it) } })
+
+    init {
+        contextMenu.hidden = true
+        addChild(contextMenu)
+    }
+
+    override fun onMouseButton(x: Int, y: Int, button: Int, action: Int, mods: Int): Boolean {
+        return when (button) {
+            GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
+                contextMenu.hidden = true
+                true
+            }
+            GLFW.GLFW_MOUSE_BUTTON_RIGHT -> if (action == GLFW.GLFW_PRESS) {
+                contextMenu.hidden = false
+                contextMenu.x = x
+                contextMenu.y = y
+                true
+            } else {
+                false
+            }
+            else -> false
+        }
     }
 
     override fun draw(canvas: Canvas) {

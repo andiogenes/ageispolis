@@ -47,12 +47,12 @@ abstract class DisplayObject(private var parent: DisplayObject? = null) : EventD
     /**
      * Обработка события нажатия на кнопку мыши.
      */
-    open fun onMouseButton(x: Int, y: Int, button: Int, action: Int, mods: Int) {}
+    open fun onMouseButton(x: Int, y: Int, button: Int, action: Int, mods: Int): Boolean { return false }
 
     /**
      * Обработка события изменения положения курсора.
      */
-    open fun onMouseMove(x: Int, y: Int) {}
+    open fun onMouseMove(x: Int, y: Int): Boolean { return false }
 
     public override fun clone(): Any {
         return super.clone().also { DisplayObjectManager.addObject(it as DisplayObject) }
