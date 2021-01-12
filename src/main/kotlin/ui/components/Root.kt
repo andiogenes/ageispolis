@@ -5,6 +5,9 @@ import org.jetbrains.skija.Paint
 import org.lwjgl.glfw.GLFW
 import ui.display.DisplayObjectContainer
 
+/**
+ * Корневой компонент приложения.
+ */
 class Root : DisplayObjectContainer() {
     init {
         addChild(FlowNode("Hello, world!", 140, 164, 0x66AAAAAA).apply {
@@ -13,7 +16,14 @@ class Root : DisplayObjectContainer() {
         })
     }
 
-    private val contextMenu = ContextMenu(listOf("Overdrive", "Delay", "Chorus").map { ContextMenu.MenuItem(it) { println(it) } })
+    private val contextMenu = ContextMenu(listOf("Overdrive", "Delay", "Chorus").map {
+        ContextMenu.MenuItem(it) { info ->
+            addChild(FlowNode(it, 140, 164, 0x66AAAAAA).apply {
+                x = info.x
+                y = info.y
+            })
+        }
+    })
 
     init {
         contextMenu.hidden = true

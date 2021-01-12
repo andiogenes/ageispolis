@@ -17,7 +17,15 @@ class ContextMenu(private val menuItems: List<MenuItem>) : DisplayObject() {
      * @param text Отображаемый текст
      * @param action Действие, совершаемое при нажатии на элемент
      */
-    data class MenuItem(val text: String, val action: () -> Unit = {})
+    data class MenuItem(val text: String, val action: (ActionInfo) -> Unit = { _ -> }) {
+        /**
+         * Данные, необходимые для выполнения действия.
+         *
+         * @param x Координата x компонента
+         * @param y Координата y компонента
+         */
+        data class ActionInfo(val x: Int, val y: Int)
+    }
 
     /**
      * Строки элементов меню (внутреннее представление Skija)
@@ -65,7 +73,7 @@ class ContextMenu(private val menuItems: List<MenuItem>) : DisplayObject() {
         if (hidden || !isHovered) return false
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && action == GLFW.GLFW_PRESS) {
-            menuItems[hoveredItemId].action()
+            menuItems[hoveredItemId].action(MenuItem.ActionInfo(this.x, this.y))
             hidden = true
             isHovered = false
         }
@@ -92,25 +100,23 @@ class ContextMenu(private val menuItems: List<MenuItem>) : DisplayObject() {
     override fun draw(canvas: Canvas) {
         if (hidden) return
 
-        val absoluteX = absoluteX.toFloat()
-        val absoluteY = absoluteY.toFloat()
-
-        val mainRect = Rect.makeXYWH(absoluteX, absoluteY, width, height)
+        val mainRect = Rect.makeXYWH(0f, 0f, width, height)
 
         canvas.save()
+        canvas.translate(absoluteX.toFloat(), absoluteY.toFloat())
         canvas.drawRect(mainRect, fillPaint)
 
         // Выделение перекрытого курсором элемента.
         if (isHovered) {
-            canvas.drawRect(Rect.makeXYWH(absoluteX, absoluteY + hoveredItemId * itemHeight, width, itemHeight), hoverPaint)
+            canvas.drawRect(Rect.makeXYWH(0f, hoveredItemId * itemHeight, width, itemHeight), hoverPaint)
         }
 
         for (i in menuLines.indices.drop(1)) {
-            val lineY = absoluteY + itemHeight * i
-            canvas.drawLine(absoluteX, lineY, absoluteX + width, lineY, strokePaint)
+            val lineY = itemHeight * i
+            canvas.drawLine(0f, lineY, width, lineY, strokePaint)
         }
         for ((i, line) in menuLines.withIndex()) {
-            canvas.drawTextLine(line, absoluteX + (width - line.width) / 2, absoluteY + itemHeight * (i + 1) - itemVerticalPadding, textPaint)
+            canvas.drawTextLine(line, (width - line.width) / 2, itemHeight * (i + 1) - itemVerticalPadding, textPaint)
         }
         canvas.drawRect(mainRect, strokePaint)
         canvas.restore()
@@ -137,7 +143,7 @@ class ContextMenu(private val menuItems: List<MenuItem>) : DisplayObject() {
         private const val itemHeight = 24f
 
         /**
-         * Вертикальный отсуп внутри элемента.
+         * Вертикальный отступ внутри элемента.
          */
         private const val itemVerticalPadding = (itemHeight - fontSize) / 1.5f
 

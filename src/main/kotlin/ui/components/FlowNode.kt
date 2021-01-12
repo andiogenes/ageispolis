@@ -1,7 +1,9 @@
 package ui.components
 
 import org.jetbrains.skija.*
+import org.lwjgl.glfw.GLFW
 import ui.display.DisplayObject
+import utils.pointInBox
 
 /**
  * Компонент узла потока данных.
@@ -56,33 +58,62 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
         (outPortsHeight * verticalPaddingScale).toInt()
     )
 
+    /**
+     * Координата X опорной точки, относительно которой перетаскивается компонент.
+     */
+    private var dragX = 0
+
+    /**
+     * Координата Y опорной точки, относительно которой перетаскивается компонент.
+     */
+    private var dragY = 0
+
+    /**
+     * Находится ли компонент в режиме перемещения.
+     */
+    private var isDrag = false
+
+    override fun onMouseButton(x: Int, y: Int, button: Int, action: Int, mods: Int): Boolean {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            when (action) {
+                GLFW.GLFW_PRESS -> if (pointInBox(x, y, this.x, this.y, width, height)) {
+                    isDrag = true
+                    dragX = x - this.x
+                    dragY = y - this.y
+                }
+                GLFW.GLFW_RELEASE -> isDrag = false
+            }
+        }
+
+        return false
+    }
+
+    override fun onMouseMove(x: Int, y: Int): Boolean {
+        if (isDrag) {
+            this.x = x - dragX
+            this.y = y - dragY
+            return true
+        }
+
+        return false
+    }
+
     override fun draw(canvas: Canvas) {
-        val absoluteX = absoluteX.toFloat()
-        val absoluteY = absoluteY.toFloat()
-
-        val mainRRect = RRect.makeXYWH(
-            absoluteX,
-            absoluteY,
-            width.toFloat(),
-            height.toFloat(),
-            10f
-        )
-
+        val mainRRect = RRect.makeXYWH(0f, 0f, width.toFloat(), height.toFloat(), 10f)
         val headerRRect = RRect.makeComplexXYWH(
-            absoluteX,
-            absoluteY,
-            width.toFloat(),
-            headerHeight,
+            0f, 0f,
+            width.toFloat(), headerHeight,
             floatArrayOf(10f, 10f, 0f, 0f)
         )
 
         canvas.save()
+        canvas.translate(absoluteX.toFloat(), absoluteY.toFloat())
         canvas.drawRRect(headerRRect, headerPaint)
         canvas.drawRRect(mainRRect, fillPaint)
-        canvas.drawLine(absoluteX, absoluteY + headerHeight, absoluteX + width, absoluteY + headerHeight, strokePaint)
+        canvas.drawLine(0f, headerHeight, width.toFloat(), headerHeight, strokePaint)
         canvas.drawRRect(mainRRect, strokePaint)
-        drawPorts(canvas, absoluteX, absoluteY)
-        canvas.drawTextLine(titleLine, absoluteX + (width - titleLineWidth) / 2, absoluteY + headerHeight - titleLineHeight / 4, textPaint)
+        drawPorts(canvas)
+        canvas.drawTextLine(titleLine, (width - titleLineWidth) / 2, headerHeight - titleLineHeight / 4, textPaint)
         canvas.restore()
     }
 
@@ -92,18 +123,17 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
     /**
      * Отрисовка портов.
      */
-    private fun drawPorts(canvas: Canvas, absoluteX: Float, absoluteY: Float) {
+    private fun drawPorts(canvas: Canvas) {
         for (i in 0 until inPortsCount) {
-            val portY = absoluteY + inPortsStartY + i * portDistance + portRadius
-            canvas.drawCircle(absoluteX, portY, portRadius, portPaint)
-            canvas.drawCircle(absoluteX, portY, portRadius, portStrokePaint)
+            val portY = inPortsStartY + i * portDistance + portRadius
+            canvas.drawCircle(0f, portY, portRadius, portPaint)
+            canvas.drawCircle(0f, portY, portRadius, portStrokePaint)
         }
 
-        val outPortX = absoluteX + width
         for (i in 0 until outPortsCount) {
-            val portY = absoluteY + outPortsStartY + i * portDistance + portRadius
-            canvas.drawCircle(outPortX, portY, portRadius, portPaint)
-            canvas.drawCircle(outPortX, portY, portRadius, portStrokePaint)
+            val portY = outPortsStartY + i * portDistance + portRadius
+            canvas.drawCircle(width.toFloat(), portY, portRadius, portPaint)
+            canvas.drawCircle(width.toFloat(), portY, portRadius, portStrokePaint)
         }
     }
 
