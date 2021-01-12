@@ -7,19 +7,19 @@ open class EventDispatcher {
     /**
      * Слушатели событий объекта.
      */
-    private val listeners: MutableMap<EventType, ArrayList<EventListener>> = mutableMapOf()
+    private val listeners: MutableMap<String, ArrayList<EventListener>> = mutableMapOf()
 
     /**
      * Добавить слушателя события типа [type].
      */
-    fun addEventListener(type: EventType, listener: EventListener) {
+    fun addEventListener(type: String, listener: EventListener) {
         listeners.getOrPut(type) { arrayListOf() }.add(listener)
     }
 
     /**
      * Удалить слушателя события типа [type].
      */
-    fun removeEventListener(type: EventType, listener: EventListener) {
+    fun removeEventListener(type: String, listener: EventListener) {
         listeners[type]?.remove(listener)
     }
 

@@ -3,6 +3,7 @@ package ui.components
 import org.jetbrains.skija.*
 import org.lwjgl.glfw.GLFW
 import ui.display.DisplayObject
+import ui.display.DisplayObjectContainer
 import utils.pointInBox
 
 /**
@@ -13,7 +14,7 @@ import utils.pointInBox
  * @param height Высота компонента
  * @param fillColor Цвет заливки компонента
  */
-class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : DisplayObject() {
+class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : DisplayObjectContainer() {
     // Внутренние объекты Skija для отрисовки компонента.
     private val fillShader = Shader.makeLinearGradient(0f, 0f, 0f, 480f, intArrayOf(fillColor, 0xFF000000.toInt()))
     private val fillPaint = Paint().setShader(fillShader).setMode(PaintMode.FILL).setImageFilter(fillShadow)
@@ -57,6 +58,19 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
         (inPortsHeight * verticalPaddingScale).toInt(),
         (outPortsHeight * verticalPaddingScale).toInt()
     )
+
+    init {
+        val sliderWidth = (width / horizontalPaddingScale * 1.1).toInt()
+        addChild(Slider("Test", sliderWidth, 24).apply {
+            x = (this@FlowNode.width - sliderWidth) / 2
+            y = 30
+            addEventListener(Slider.valueChangedEventType) {
+                when (it) {
+                    is Slider.ValueChangedEvent -> println("${it.oldValue}, ${it.newValue}")
+                }
+            }
+        })
+    }
 
     /**
      * Координата X опорной точки, относительно которой перетаскивается компонент.
