@@ -2,7 +2,6 @@ package ui.components
 
 import org.jetbrains.skija.*
 import org.lwjgl.glfw.GLFW
-import ui.display.DisplayObject
 import ui.display.DisplayObjectContainer
 import utils.pointInBox
 
@@ -37,12 +36,12 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
     /**
      * Минимальная высота компонента с заданным количеством входящих портов.
      */
-    private val inPortsHeight = portDiameter * inPortsCount + (inPortsCount - 1) * (portDistance - portDiameter)
+    private val inPortsHeight = Port.diameter * inPortsCount + (inPortsCount - 1) * (portDistance - Port.diameter)
 
     /**
      * Минимальная высота компонента с заданным количеством исходящих портов.
      */
-    private val outPortsHeight = portDiameter * outPortsCount + (outPortsCount - 1) * (portDistance - portDiameter)
+    private val outPortsHeight = Port.diameter * outPortsCount + (outPortsCount - 1) * (portDistance - Port.diameter)
 
     /**
      * Действительная ширина компонента.
@@ -60,6 +59,22 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
     )
 
     init {
+        val inPortsStartY = (headerHeight + this.height - inPortsHeight) / 2
+        val outPortsStartY = (headerHeight + this.height - outPortsHeight) / 2
+
+        for (i in 0 until inPortsCount) {
+            addChild(Port().apply {
+                y = (inPortsStartY + i * portDistance + Port.radius).toInt()
+            })
+        }
+
+        for (i in 0 until outPortsCount) {
+            addChild(Port().apply {
+                x = width
+                y = (outPortsStartY + i * portDistance + Port.radius).toInt()
+            })
+        }
+
         val sliderWidth = (width / horizontalPaddingScale * 1.1).toInt()
         addChild(Slider("Test", sliderWidth, 24).apply {
             x = (this@FlowNode.width - sliderWidth) / 2
@@ -126,29 +141,8 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
         canvas.drawRRect(mainRRect, fillPaint)
         canvas.drawLine(0f, headerHeight, width.toFloat(), headerHeight, strokePaint)
         canvas.drawRRect(mainRRect, strokePaint)
-        drawPorts(canvas)
         canvas.drawTextLine(titleLine, (width - titleLineWidth) / 2, headerHeight - titleLineHeight / 4, textPaint)
         canvas.restore()
-    }
-
-    private val inPortsStartY = (headerHeight + this.height - inPortsHeight) / 2
-    private val outPortsStartY = (headerHeight + this.height - outPortsHeight) / 2
-
-    /**
-     * Отрисовка портов.
-     */
-    private fun drawPorts(canvas: Canvas) {
-        for (i in 0 until inPortsCount) {
-            val portY = inPortsStartY + i * portDistance + portRadius
-            canvas.drawCircle(0f, portY, portRadius, portPaint)
-            canvas.drawCircle(0f, portY, portRadius, portStrokePaint)
-        }
-
-        for (i in 0 until outPortsCount) {
-            val portY = outPortsStartY + i * portDistance + portRadius
-            canvas.drawCircle(width.toFloat(), portY, portRadius, portPaint)
-            canvas.drawCircle(width.toFloat(), portY, portRadius, portStrokePaint)
-        }
     }
 
     companion object {
@@ -156,9 +150,6 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
         private val fillShadow = ImageFilter.makeDropShadow(0f, 10f, 5f, 10f, 0xFF000000.toInt())
         private val strokePaint = Paint().setColor(0xFF000000.toInt()).setMode(PaintMode.STROKE).setStrokeWidth(0.8f)
         private val headerPaint = Paint().setBlendMode(BlendMode.CLEAR)
-
-        private val portPaint = Paint().setColor(0xFFDBE11E.toInt()).setMode(PaintMode.FILL)
-        private val portStrokePaint = Paint().setColor(0xFF000000.toInt()).setMode(PaintMode.STROKE).setStrokeWidth(1.25f)
 
         private val typeface = Typeface.makeDefault()
         private val font = Font(typeface, 16f)
@@ -168,16 +159,6 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
          * Высота заголовка.
          */
         private const val headerHeight = 24f
-
-        /**
-         * Радиус порта.
-         */
-        private const val portRadius = 7.5f
-
-        /**
-         * Диаметр порта.
-         */
-        private const val portDiameter = portRadius * 2
 
         /**
          * Расстояние между портами.
