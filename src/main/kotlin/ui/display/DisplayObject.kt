@@ -2,6 +2,7 @@ package ui.display
 
 import org.jetbrains.skija.Canvas
 import ui.core.DisplayObjectManager
+import ui.events.Event
 import ui.events.EventDispatcher
 
 /**
@@ -9,6 +10,13 @@ import ui.events.EventDispatcher
  */
 abstract class DisplayObject(private var parent: DisplayObject? = null) : EventDispatcher(), Cloneable {
     init { DisplayObjectManager.addObject(this) }
+
+    /**
+     * Событие удаления объекта.
+     *
+     * @param disposedObject Удаленный объект
+     */
+    data class DisposeEvent(val disposedObject: DisplayObject) : Event(disposeEventType)
 
     /**
      * Координата x объекта (относительно родителя).
@@ -54,7 +62,22 @@ abstract class DisplayObject(private var parent: DisplayObject? = null) : EventD
      */
     open fun onMouseMove(x: Int, y: Int): Boolean { return false }
 
+    /**
+     * Удлаяет объект из системы отрисовки и обработки событий.
+     */
+    open fun dispose(): Boolean {
+        dispatchEvent(DisposeEvent(this))
+        return DisplayObjectManager.removeObject(this)
+    }
+
     public override fun clone(): Any {
         return super.clone().also { DisplayObjectManager.addObject(it as DisplayObject) }
+    }
+
+    companion object {
+        /**
+         * Ключ, по которому можно подписаться на события типа [DisposeEvent].
+         */
+        const val disposeEventType = "onDispose"
     }
 }

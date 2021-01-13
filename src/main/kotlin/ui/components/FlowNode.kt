@@ -76,25 +76,35 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
         (outPortsHeight * verticalPaddingScale).toInt()
     )
 
+    private val portsInternal: ArrayList<Port> = arrayListOf()
+
+    /**
+     * Входные и выходные порты узла.
+     */
+    val ports: List<Port> get() = portsInternal
+
     init {
         val inPortsStartY = (headerHeight + this.height - inPortsHeight) / 2
         val outPortsStartY = (headerHeight + this.height - outPortsHeight) / 2
 
         // Добавление входящих портов
         for (i in 0 until inPortsCount) {
-            addChild(Port().apply {
+            Port().apply {
                 y = (inPortsStartY + i * portDistance + Port.radius).toInt()
                 addEventListener(Port.portEventType) {
                     if (it is PortEvent) {
                         this@FlowNode.dispatchEvent(InEvent(this@FlowNode, it))
                     }
                 }
-            })
+            }.also {
+                portsInternal.add(it)
+                addChild(it)
+            }
         }
 
         // Добавление исходящих портов
         for (i in 0 until outPortsCount) {
-            addChild(Port().apply {
+            Port().apply {
                 x = width
                 y = (outPortsStartY + i * portDistance + Port.radius).toInt()
                 addEventListener(Port.portEventType) {
@@ -102,7 +112,10 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
                         this@FlowNode.dispatchEvent(OutEvent(this@FlowNode, it))
                     }
                 }
-            })
+            }.also {
+                portsInternal.add(it)
+                addChild(it)
+            }
         }
 
         val sliderWidth = (width / horizontalPaddingScale * 1.1).toInt()
@@ -133,15 +146,24 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
     private var isDrag = false
 
     override fun onMouseButton(x: Int, y: Int, button: Int, action: Int, mods: Int): Boolean {
+        if (!pointInBox(x, y, this.x, this.y, width, height)) return false
+
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             when (action) {
-                GLFW.GLFW_PRESS -> if (pointInBox(x, y, this.x, this.y, width, height)) {
+                GLFW.GLFW_PRESS -> {
                     isDrag = true
                     dragX = x - this.x
                     dragY = y - this.y
                 }
                 GLFW.GLFW_RELEASE -> isDrag = false
             }
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            if (action == GLFW.GLFW_PRESS) {
+                dispose()
+                return true
+            }
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            return true
         }
 
         return false

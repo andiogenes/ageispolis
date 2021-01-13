@@ -21,4 +21,12 @@ abstract class DisplayObjectContainer(parent: DisplayObject? = null) : DisplayOb
         child.assignParent(null)
         return children.remove(child)
     }
+
+    override fun dispose(): Boolean {
+        // Удаляем дочерние из системы обработки;
+        // затем очищаем список дочерних объектов,
+        // чтобы не было висячих указателей, провоцирующих memory leak
+        children.onEach { it.dispose() }.clear()
+        return super.dispose()
+    }
 }

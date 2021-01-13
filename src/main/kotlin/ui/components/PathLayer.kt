@@ -37,14 +37,14 @@ class PathLayer : DisplayObject() {
     /**
      * Создает дугу из [src] в [dest].
      */
-    private fun addPath(src: Port, dest: Port): Boolean {
+    fun addPath(src: Port, dest: Port): Boolean {
         return connectedPorts.add(src to dest)
     }
 
     /**
      * Удаляет дугу с [endpoint] на одном из концов.
      */
-    private fun removePath(endpoint: Port): Boolean {
+    fun removePath(endpoint: Port): Boolean {
         return connectedPorts.removeIf { it.first == endpoint || it.second == endpoint }
     }
 
