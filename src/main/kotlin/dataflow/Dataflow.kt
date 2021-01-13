@@ -17,7 +17,12 @@ class Dataflow<T> {
     /**
      * Удаляет узел из потока данных.
      */
-    fun remove(node: Node<T>) = nodes.remove(node)
+    fun remove(node: Node<T>): Boolean {
+        // Удаляем связи с узлом
+        node.`in`.forEach { it?.out?.forEachIndexed { index, v -> if (v == node) it.out[index] = null  } }
+        node.`out`.forEach { it?.`in`?.forEachIndexed { index, v -> if (v == node) it.`in`[index] = null  } }
+        return nodes.remove(node)
+    }
 
     /**
      * Ищет источник потока - узел без входящих портов.

@@ -38,6 +38,8 @@ class PathLayer : DisplayObject() {
      * Создает дугу из [src] в [dest].
      */
     fun addPath(src: Port, dest: Port): Boolean {
+        src.informAboutLinkCreation()
+        dest.informAboutLinkCreation()
         return connectedPorts.add(src to dest)
     }
 
@@ -45,7 +47,12 @@ class PathLayer : DisplayObject() {
      * Удаляет дугу с [endpoint] на одном из концов.
      */
     fun removePath(endpoint: Port): Boolean {
-        return connectedPorts.removeIf { it.first == endpoint || it.second == endpoint }
+        return connectedPorts.find { it.first == endpoint || it.second == endpoint }?.also {
+            it.first.informAboutLinkDeletion()
+            it.second.informAboutLinkDeletion()
+        }.let {
+            connectedPorts.remove(it)
+        }
     }
 
     /**
@@ -71,6 +78,7 @@ class PathLayer : DisplayObject() {
                     removePath(e.portEvent.port)
                     reset()
                 }
+                else -> {}
             }
         }
     }
@@ -98,6 +106,7 @@ class PathLayer : DisplayObject() {
                     removePath(e.portEvent.port)
                     reset()
                 }
+                else -> {}
             }
         }
     }

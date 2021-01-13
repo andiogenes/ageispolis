@@ -6,12 +6,26 @@ import org.jetbrains.skija.Paint
 import org.lwjgl.glfw.GLFW
 import ui.display.DisplayObject
 import ui.display.DisplayObjectContainer
+import ui.events.Event
 
 /**
  * Корневой компонент приложения.
  */
 class Root : DisplayObjectContainer() {
-    private val pathLayer = PathLayer()
+    /**
+     * Событие добавления узла в рабочую область.
+     */
+    data class NodeCreatedEvent(val node: FlowNode) : Event(nodeCreatedEventType)
+
+    /**
+     * Событие удаления узла из рабочей области.
+     */
+    data class NodeRemovedEvent(val node: FlowNode) : Event(nodeRemovedEventType)
+
+    /**
+     * Экземпляр презентовщика этого представления.
+     */
+    private val presenter = Presenter(this)
 
     /**
      * Слой отображения дуг.
@@ -23,7 +37,7 @@ class Root : DisplayObjectContainer() {
      */
     private val contextMenu = ContextMenu(listOf("Overdrive", "Delay", "Chorus").map {
         ContextMenu.MenuItem(it) { info ->
-            addChild(FlowNode(it, 140, 164, 0x66AAAAAA).apply {
+            val node = FlowNode(it, 140, 164, 0x66AAAAAA).apply {
                 x = info.x
                 y = info.y
                 addEventListener(FlowNode.inEventType) { e -> pathLayer.processInEvent(e) }
@@ -32,11 +46,14 @@ class Root : DisplayObjectContainer() {
                     if (e is DisposeEvent) {
                         if (e.disposedObject is FlowNode) {
                             e.disposedObject.ports.forEach { p -> pathLayer.removePath(p) }
+                            this@Root.dispatchEvent(NodeRemovedEvent(e.disposedObject))
                         }
                         removeChild(e.disposedObject)
                     }
                 }
-            })
+            }
+            addChild(node)
+            dispatchEvent(NodeCreatedEvent(node))
         }
     }).also {
         it.hidden = true
@@ -75,8 +92,27 @@ class Root : DisplayObjectContainer() {
     }
 
     companion object {
+        // Внутренние объекты Skija для отрисовки компонента.
         private val gridPaint = Paint().setColor(0xFF000000.toInt()).setStrokeWidth(1f).setAntiAlias(false)
+
+        /**
+         * Цвет рабочей области.
+         */
         private const val backgroundColor = 0xFF393939.toInt()
+
+        /**
+         * Ширина сетки.
+         */
         private const val gridWidth = 20
+
+        /**
+         * Ключ, по которому можно подписаться на [NodeCreatedEvent].
+         */
+        const val nodeCreatedEventType = "onNodeCreated"
+
+        /**
+         * Ключ, по которому можно подписаться на [NodeRemovedEvent].
+         */
+        const val nodeRemovedEventType = "onNodeRemoved"
     }
 }

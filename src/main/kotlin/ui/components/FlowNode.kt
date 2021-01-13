@@ -19,18 +19,29 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
     /**
      * Событие, связанное с входящим портом узла.
      *
+     * @param portIndex Индекс порта
      * @param node Узел, вызвавший событие
      * @param portEvent Событие порта
      */
-    data class InEvent(val node: FlowNode, val portEvent: PortEvent) : Event(inEventType)
+    data class InEvent(val portIndex: Int, val node: FlowNode, val portEvent: PortEvent) : Event(inEventType)
 
     /**
      * Событие, связанное с выходящим портом узла.
      *
+     * @param portIndex Индекс порта
      * @param node Узел, вызвавший событие
      * @param portEvent Событие порта
      */
-    data class OutEvent(val node: FlowNode, val portEvent: PortEvent) : Event(outEventType)
+    data class OutEvent(val portIndex: Int, val node: FlowNode, val portEvent: PortEvent) : Event(outEventType)
+
+    /**
+     * Событие изменения значения одним из ползунков.
+     *
+     * @param valueIndex Индекс ползунка
+     * @param oldValue Старое значение
+     * @param newValue Новое значение
+     */
+    data class ValueChangedEvent(val valueIndex: Int, val oldValue: Float, val newValue: Float) : Event(valueChangedEventType)
 
     // Внутренние объекты Skija для отрисовки компонента.
     private val fillShader = Shader.makeLinearGradient(0f, 0f, 0f, 480f, intArrayOf(fillColor, 0xFF000000.toInt()))
@@ -44,12 +55,12 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
     /**
      * Количество входящих портов узла.
      */
-    private val inPortsCount = 3
+    val inPortsCount = 1
 
     /**
      * Количество исходящих портов узла.
      */
-    private val outPortsCount = 1
+    val outPortsCount = 1
 
     /**
      * Минимальная высота компонента с заданным количеством входящих портов.
@@ -93,7 +104,7 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
                 y = (inPortsStartY + i * portDistance + Port.radius).toInt()
                 addEventListener(Port.portEventType) {
                     if (it is PortEvent) {
-                        this@FlowNode.dispatchEvent(InEvent(this@FlowNode, it))
+                        this@FlowNode.dispatchEvent(InEvent(i, this@FlowNode, it))
                     }
                 }
             }.also {
@@ -109,7 +120,7 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
                 y = (outPortsStartY + i * portDistance + Port.radius).toInt()
                 addEventListener(Port.portEventType) {
                     if (it is PortEvent) {
-                        this@FlowNode.dispatchEvent(OutEvent(this@FlowNode, it))
+                        this@FlowNode.dispatchEvent(OutEvent(i, this@FlowNode, it))
                     }
                 }
             }.also {
@@ -236,5 +247,10 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
          * Ключ для подписки на события типа [OutEvent].
          */
         const val outEventType = "onOutPort"
+
+        /**
+         * Ключ для подписки на события типа [ValueChangedEvent].
+         */
+        const val valueChangedEventType = "onValueChanged"
     }
 }

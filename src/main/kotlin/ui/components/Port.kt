@@ -22,9 +22,21 @@ class Port : DisplayObject() {
         enum class Reason {
             MOUSE_PRESSED,
             MOUSE_RELEASED,
-            RIGHT_CLICK
+            RIGHT_CLICK,
+            LINK_CREATED,
+            LINK_REMOVED
         }
     }
+
+    /**
+     * Информирует о том, что с этим портом установлена связь.
+     */
+    fun informAboutLinkCreation() = dispatchEvent(PortEvent(this, PortEvent.Reason.LINK_CREATED))
+
+    /**
+     * Информирует о том, что с этим портом разорвана связь.
+     */
+    fun informAboutLinkDeletion() = dispatchEvent(PortEvent(this, PortEvent.Reason.LINK_REMOVED))
 
     override fun onMouseButton(x: Int, y: Int, button: Int, action: Int, mods: Int): Boolean {
         if (pointInCircle(x, y, absoluteX, absoluteY, radius)) {
