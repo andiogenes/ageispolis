@@ -62,6 +62,7 @@ class PathLayer : DisplayObject() {
                 Port.PortEvent.Reason.MOUSE_RELEASED -> {
                     if (to == null && from != null && e.node != startNode) {
                         to = e.portEvent.port
+                        removePath(from!!)
                         addPath(from!!, to!!)
                     }
                     reset()
@@ -88,6 +89,7 @@ class PathLayer : DisplayObject() {
                 Port.PortEvent.Reason.MOUSE_RELEASED -> {
                     if (from == null && to != null && e.node != startNode) {
                         from = e.portEvent.port
+                        removePath(to!!)
                         addPath(from!!, to!!)
                     }
                     reset()
