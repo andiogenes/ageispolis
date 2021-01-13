@@ -9,18 +9,15 @@ import ui.display.DisplayObjectContainer
  * Корневой компонент приложения.
  */
 class Root : DisplayObjectContainer() {
-    init {
-        addChild(FlowNode("Hello, world!", 140, 164, 0x66AAAAAA).apply {
-            x = 10
-            y = 10
-        })
-    }
+    private val pathLayer = PathLayer()
 
     private val contextMenu = ContextMenu(listOf("Overdrive", "Delay", "Chorus").map {
         ContextMenu.MenuItem(it) { info ->
             addChild(FlowNode(it, 140, 164, 0x66AAAAAA).apply {
                 x = info.x
                 y = info.y
+                addEventListener(FlowNode.inEventType) { e -> pathLayer.processInEvent(e) }
+                addEventListener(FlowNode.outEventType) { e -> pathLayer.processOutEvent(e) }
             })
         }
     })

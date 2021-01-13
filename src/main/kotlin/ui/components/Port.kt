@@ -1,12 +1,52 @@
 package ui.components
 
-import org.jetbrains.skija.*
+import org.jetbrains.skija.Canvas
+import org.jetbrains.skija.Paint
+import org.jetbrains.skija.PaintMode
+import org.lwjgl.glfw.GLFW
 import ui.display.DisplayObject
+import ui.events.Event
+import utils.pointInCircle
 
 /**
  * Компонент порта узла потока данных.
  */
 class Port : DisplayObject() {
+    /**
+     * Событие, связанное с портом.
+     *
+     * @param port Порт, вызвавший событие
+     * @param reason Причина вызова события
+     */
+    data class PortEvent(val port: Port, val reason: Reason) : Event(portEventType) {
+        enum class Reason {
+            MOUSE_PRESSED,
+            MOUSE_RELEASED,
+            RIGHT_CLICK
+        }
+    }
+
+    override fun onMouseButton(x: Int, y: Int, button: Int, action: Int, mods: Int): Boolean {
+        if (pointInCircle(x, y, absoluteX, absoluteY, radius)) {
+            when (button) {
+                GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
+                    if (action == GLFW.GLFW_PRESS) {
+                        dispatchEvent(PortEvent(this, PortEvent.Reason.MOUSE_PRESSED))
+                    } else if (action == GLFW.GLFW_RELEASE) {
+                        dispatchEvent(PortEvent(this, PortEvent.Reason.MOUSE_RELEASED))
+                    }
+                }
+                GLFW.GLFW_MOUSE_BUTTON_RIGHT -> {
+                    if (action == GLFW.GLFW_PRESS) {
+                        dispatchEvent(PortEvent(this, PortEvent.Reason.RIGHT_CLICK))
+                    }
+                }
+            }
+            return true
+        }
+        return false
+    }
+
     override fun draw(canvas: Canvas) {
         canvas.save()
         canvas.translate(absoluteX.toFloat(), absoluteY.toFloat())
@@ -29,5 +69,10 @@ class Port : DisplayObject() {
          * Диаметр порта.
          */
         const val diameter = radius * 2
+
+        /**
+         * Ключ для подписки на события типа [PortEvent].
+         */
+        const val portEventType = "onPort"
     }
 }

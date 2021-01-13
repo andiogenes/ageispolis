@@ -54,6 +54,9 @@ class Slider(
             if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) return true
 
             isChanging = action == GLFW.GLFW_PRESS
+            // Препятствует изменению значения при отжатии левой кнопки мыши
+            if (!isChanging) return true
+
             value = (x - left) / width.toFloat()
             return true
         }
@@ -122,6 +125,6 @@ class Slider(
         /**
          * Ключ для подписки на события типа [ValueChangedEvent].
          */
-        const val valueChangedEventType = "sliderValueChanged"
+        const val valueChangedEventType = "onSliderValueChanged"
     }
 }

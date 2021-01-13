@@ -2,7 +2,9 @@ package ui.components
 
 import org.jetbrains.skija.*
 import org.lwjgl.glfw.GLFW
+import ui.components.Port.PortEvent
 import ui.display.DisplayObjectContainer
+import ui.events.Event
 import utils.pointInBox
 
 /**
@@ -14,6 +16,22 @@ import utils.pointInBox
  * @param fillColor Цвет заливки компонента
  */
 class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : DisplayObjectContainer() {
+    /**
+     * Событие, связанное с входящим портом узла.
+     *
+     * @param node Узел, вызвавший событие
+     * @param portEvent Событие порта
+     */
+    data class InEvent(val node: FlowNode, val portEvent: PortEvent) : Event(inEventType)
+
+    /**
+     * Событие, связанное с выходящим портом узла.
+     *
+     * @param node Узел, вызвавший событие
+     * @param portEvent Событие порта
+     */
+    data class OutEvent(val node: FlowNode, val portEvent: PortEvent) : Event(outEventType)
+
     // Внутренние объекты Skija для отрисовки компонента.
     private val fillShader = Shader.makeLinearGradient(0f, 0f, 0f, 480f, intArrayOf(fillColor, 0xFF000000.toInt()))
     private val fillPaint = Paint().setShader(fillShader).setMode(PaintMode.FILL).setImageFilter(fillShadow)
@@ -62,16 +80,28 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
         val inPortsStartY = (headerHeight + this.height - inPortsHeight) / 2
         val outPortsStartY = (headerHeight + this.height - outPortsHeight) / 2
 
+        // Добавление входящих портов
         for (i in 0 until inPortsCount) {
             addChild(Port().apply {
                 y = (inPortsStartY + i * portDistance + Port.radius).toInt()
+                addEventListener(Port.portEventType) {
+                    if (it is PortEvent) {
+                        this@FlowNode.dispatchEvent(InEvent(this@FlowNode, it))
+                    }
+                }
             })
         }
 
+        // Добавление исходящих портов
         for (i in 0 until outPortsCount) {
             addChild(Port().apply {
                 x = width
                 y = (outPortsStartY + i * portDistance + Port.radius).toInt()
+                addEventListener(Port.portEventType) {
+                    if (it is PortEvent) {
+                        this@FlowNode.dispatchEvent(OutEvent(this@FlowNode, it))
+                    }
+                }
             })
         }
 
@@ -174,5 +204,15 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
          * Вертикальный отступ внутри компонента.
          */
         private const val verticalPaddingScale = 1.75
+
+        /**
+         * Ключ для подписки на события типа [InEvent].
+         */
+        const val inEventType = "onInPort"
+
+        /**
+         * Ключ для подписки на события типа [OutEvent].
+         */
+        const val outEventType = "onOutPort"
     }
 }
