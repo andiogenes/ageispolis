@@ -21,6 +21,11 @@ object Dsl {
         var outPorts: Int = 0
 
         /**
+         * Цвет заливки компонента
+         */
+        var fillColor: Int = 0x66AAAAAA
+
+        /**
          * Параметры обработчика
          */
         class Parameters {
@@ -48,7 +53,7 @@ object Dsl {
      * Строит обработчик на основе конфигурации.
      */
     private fun ProcessorConfiguration.toProcessor(): Processor {
-        return Processor(this.name, this.inPorts, this.outPorts, this.parameters)
+        return Processor(this.name, this.inPorts, this.outPorts, this.fillColor, this.parameters)
     }
 
     /**

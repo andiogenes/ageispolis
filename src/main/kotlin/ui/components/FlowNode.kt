@@ -15,7 +15,27 @@ import utils.pointInBox
  * @param height Высота компонента
  * @param fillColor Цвет заливки компонента
  */
-class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : DisplayObjectContainer() {
+class FlowNode(
+    val title: String,
+    width: Int,
+    height: Int,
+    fillColor: Int,
+
+    /**
+     * Количество входящих портов узла.
+     */
+    val inPortsCount: Int = 0,
+
+    /**
+     * Количество выходящих портов узла.
+     */
+    val outPortsCount: Int = 0,
+
+    /**
+     * Параметры обработчика.
+     */
+    val parameters: List<Pair<String, Float>> = listOf(),
+) : DisplayObjectContainer() {
     /**
      * Событие, связанное с входящим портом узла.
      *
@@ -51,17 +71,6 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
     private val titleLineWidth = titleLine.width
     private val titleLineHeight = titleLine.height
 
-    // TODO: вычислять из агрегируемого узла
-    /**
-     * Количество входящих портов узла.
-     */
-    val inPortsCount = 1
-
-    /**
-     * Количество исходящих портов узла.
-     */
-    val outPortsCount = 1
-
     /**
      * Минимальная высота компонента с заданным количеством входящих портов.
      */
@@ -83,6 +92,8 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
     private val height = maxOf(
         height,
         (headerHeight * 2).toInt(),
+        // TODO: убрать волшебство
+        (headerHeight + 30 * parameters.size + 6).toInt(),
         (inPortsHeight * verticalPaddingScale).toInt(),
         (outPortsHeight * verticalPaddingScale).toInt()
     )
@@ -129,16 +140,22 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
             }
         }
 
+        // Добавление ползунков параметров
         val sliderWidth = (width / horizontalPaddingScale * 1.1).toInt()
-        addChild(Slider("Test", sliderWidth, 24).apply {
-            x = (this@FlowNode.width - sliderWidth) / 2
-            y = 30
-            addEventListener(Slider.valueChangedEventType) {
-                when (it) {
-                    is Slider.ValueChangedEvent -> println("${it.oldValue}, ${it.newValue}")
+        val sliderX = (this@FlowNode.width - sliderWidth) / 2
+        val sliderOffset = 30
+
+        for ((i, v) in parameters.withIndex()) {
+            addChild(Slider(title = v.first, sliderWidth, sliderHeight, value = v.second).apply {
+                x = sliderX
+                y = sliderOffset * (i + 1)
+                addEventListener(Slider.valueChangedEventType) {
+                    when (it) {
+                        is Slider.ValueChangedEvent -> println("Slider $i: ${it.oldValue}, ${it.newValue}")
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     /**
@@ -237,6 +254,11 @@ class FlowNode(title: String, width: Int, height: Int, fillColor: Int) : Display
          * Вертикальный отступ внутри компонента.
          */
         private const val verticalPaddingScale = 1.75
+
+        /**
+         * Высота ползунка параметра.
+         */
+        private const val sliderHeight = 24
 
         /**
          * Ключ для подписки на события типа [InEvent].

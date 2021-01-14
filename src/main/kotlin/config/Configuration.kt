@@ -20,6 +20,7 @@ object Configuration {
         processor("Distortion") {
             inPorts = 1
             outPorts = 1
+            fillColor = 0x66FF0000
 
             parameters {
                 "Volume" to 0.5f

@@ -5,22 +5,27 @@ package config
  */
 data class Processor(
     /**
-     * Имя обработчика
+     * Имя обработчика.
      */
     val name: String,
 
     /**
-     * Входящие порты
+     * Входящие порты.
      */
     val inPorts: Int,
 
     /**
-     * Исходящие порты
+     * Исходящие порты.
      */
     val outPorts: Int,
 
     /**
-     * Параметры обработчика
+     * Цвет заливки компонента.
+     */
+    val fillColor: Int,
+
+    /**
+     * Параметры обработчика.
      */
     val parameters: List<Pair<String, Float>>
 )

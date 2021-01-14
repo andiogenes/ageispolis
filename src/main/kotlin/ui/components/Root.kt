@@ -1,5 +1,6 @@
 package ui.components
 
+import config.Configuration
 import logic.Presenter
 import org.jetbrains.skija.Canvas
 import org.jetbrains.skija.Paint
@@ -35,9 +36,9 @@ class Root : DisplayObjectContainer() {
     /**
      * Контекстное меню рабочей области.
      */
-    private val contextMenu = ContextMenu(listOf("Overdrive", "Delay", "Chorus").map {
-        ContextMenu.MenuItem(it) { info ->
-            val node = FlowNode(it, 140, 164, 0x66AAAAAA).apply {
+    private val contextMenu = ContextMenu(Configuration.processors.map {
+        ContextMenu.MenuItem(it.name) { info ->
+            val node = FlowNode(it.name, 140, 0, it.fillColor, it.inPorts, it.outPorts, it.parameters).apply {
                 x = info.x
                 y = info.y
                 addEventListener(FlowNode.inEventType) { e -> pathLayer.processInEvent(e) }
