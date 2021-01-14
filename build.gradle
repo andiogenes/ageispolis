@@ -6,14 +6,19 @@ plugins {
 
 project.ext.lwjglVersion = "3.2.3"
 
+def skijaPlatform = ''
+
 switch (OperatingSystem.current()) {
     case OperatingSystem.LINUX:
         project.ext.lwjglNatives = "natives-linux"
+        skijaPlatform = "linux"
         break
     case OperatingSystem.WINDOWS:
         project.ext.lwjglNatives = "natives-windows"
+        skijaPlatform = "windows"
         break
 }
+
 
 group = 'com.andiogenes'
 version = '1.0-SNAPSHOT'
@@ -50,7 +55,7 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-par::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 
-    api "org.jetbrains.skija:skija-linux:0.6.61"
+    api "org.jetbrains.skija:skija-$skijaPlatform:0.6.61"
 }
 
 compileKotlin {
