@@ -65,7 +65,7 @@ class Presenter(private val view: Root) {
             }
             previousInEvent = null
             previousOutEvent = null
-        } else {
+        } else if (e.reason == Port.PortEvent.Reason.LINK_CREATED || e.reason == Port.PortEvent.Reason.LINK_REMOVED) {
             previousInEvent = e
         }
     }
@@ -91,7 +91,7 @@ class Presenter(private val view: Root) {
             }
             previousInEvent = null
             previousOutEvent = null
-        } else {
+        } else if (e.reason == Port.PortEvent.Reason.LINK_CREATED || e.reason == Port.PortEvent.Reason.LINK_REMOVED) {
             previousOutEvent = e
         }
     }
