@@ -1,7 +1,5 @@
 package dataflow
 
-import java.util.concurrent.atomic.AtomicReference
-
 /**
  * Узел потока данных.
  */
@@ -39,7 +37,7 @@ class Node<A>(
     /**
      * Параметры.
      */
-    val parameters: Array<AtomicReference<Float?>> = Array(parametersCount) { AtomicReference(0f) }
+    val parameters: FloatArray = FloatArray(parametersCount) { 0f }
 
     /**
      * Соединяет входящий порт [inPort] узла с выходящим портом [outPort] узла [source].
@@ -63,6 +61,5 @@ class Node<A>(
     fun dispose() {
         `in`.fill(null)
         out.fill(null)
-        parameters.forEach { it.set(null) }
     }
 }

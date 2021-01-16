@@ -53,7 +53,7 @@ class NodeBinding(val model: Node<Int>, val view: FlowNode) : EventDispatcher() 
         view.addEventListener(FlowNode.valueChangedEventType) {
             if (it is FlowNode.ValueChangedEvent) {
                 // Обновляем параметр модели по изменению в представлении.
-                model.parameters[it.valueIndex].set(it.newValue)
+                model.parameters[it.valueIndex] = it.newValue
             }
         }
     }
