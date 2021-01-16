@@ -12,8 +12,9 @@ class Presenter(private val view: Root) {
     init {
         view.addEventListener(Root.nodeCreatedEventType) {
             if (it is Root.NodeCreatedEvent) {
-                val node = Node<Int>(it.node.inPortsCount, it.node.outPortsCount) { 0 }
+                val node = Node<Int>(it.node.inPortsCount, it.node.outPortsCount, it.node.parameters.size) { 0 }
                 model.add(node)
+
                 val binding = NodeBinding(node, it.node)
 
                 binding.addEventListener(NodeBinding.nodeRemovedType) { e ->
