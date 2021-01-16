@@ -150,8 +150,8 @@ class FlowNode(
                 x = sliderX
                 y = sliderOffset * (i + 1)
                 addEventListener(Slider.valueChangedEventType) {
-                    when (it) {
-                        is Slider.ValueChangedEvent -> println("Slider $i: ${it.oldValue}, ${it.newValue}")
+                    if (it is Slider.ValueChangedEvent) {
+                        this@FlowNode.dispatchEvent(ValueChangedEvent(i, it.oldValue, it.newValue))
                     }
                 }
             })
