@@ -1,5 +1,8 @@
 package config
 
+import effects.AudioEffectConstructor
+import effects.IdempotentEffect
+
 /**
  * Domain-sailed language для конфигурирования программы.
  */
@@ -47,13 +50,22 @@ object Dsl {
         fun parameters(fn: Parameters.() -> Unit) {
             parameters = Parameters().also(fn).list
         }
+
+        var effect: AudioEffectConstructor = { IdempotentEffect(it) }
+
+        /**
+         * Установка эффекта обработчика.
+         */
+        fun effect(fn: AudioEffectConstructor) {
+            effect = fn
+        }
     }
 
     /**
      * Строит обработчик на основе конфигурации.
      */
     private fun ProcessorConfiguration.toProcessor(): Processor {
-        return Processor(this.name, this.inPorts, this.outPorts, this.fillColor, this.parameters)
+        return Processor(this.name, this.inPorts, this.outPorts, this.fillColor, this.parameters, this.effect)
     }
 
     /**
@@ -84,6 +96,9 @@ object Dsl {
     fun processors(fn: ProcessorListConfiguration.() -> Unit): List<Processor> {
         val processors = ProcessorListConfiguration()
         fn(processors)
+        // Утверждаем, что все обработчики в конфигурации имеют уникальные имена
+        // TODO: ввести идентификаторы обработчиков?
+        assert(processors.list.run { map { it.name }.toSet().size == size })
         return processors.list
     }
 }

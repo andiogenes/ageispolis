@@ -31,6 +31,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
     implementation "org.lwjgl:lwjgl"

@@ -1,5 +1,7 @@
 package config
 
+import effects.Player
+
 /**
  * Объект, содержащий конфигурацию программы.
  */
@@ -34,7 +36,11 @@ object Configuration {
             outPorts = 0
 
             parameters {
-                "Volume" to 0.5f
+                "Volume" to 0.1f
+            }
+
+            effect {
+                Player(it)
             }
         }
     }

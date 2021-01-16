@@ -1,6 +1,7 @@
 package logic.bindings
 
 import dataflow.Node
+import effects.AudioEffectConstructor
 import ui.components.FlowNode
 import ui.components.Port
 import ui.display.DisplayObject
@@ -10,18 +11,18 @@ import ui.events.EventDispatcher
 /**
  * Связывание модели и представления узла потока данных.
  */
-class NodeBinding(val model: Node<Int>, val view: FlowNode) : EventDispatcher() {
+class NodeBinding(val model: Node<AudioEffectConstructor>, val view: FlowNode) : EventDispatcher() {
     /**
      * Событие удаления привязанных данных.
      */
-    data class NodeRemovedEvent(val model: Node<Int>, val view: FlowNode) : Event(nodeRemovedType)
+    data class NodeRemovedEvent(val model: Node<AudioEffectConstructor>, val view: FlowNode) : Event(nodeRemovedType)
 
     /**
      * Событие связи с одним из входных портов узла.
      */
     data class InEvent(
         val portIndex: Int,
-        val model: Node<Int>,
+        val model: Node<AudioEffectConstructor>,
         val view: FlowNode,
         val reason: Port.PortEvent.Reason
     ) : Event(inEventType)
@@ -31,7 +32,7 @@ class NodeBinding(val model: Node<Int>, val view: FlowNode) : EventDispatcher() 
      */
     data class OutEvent(
         val portIndex: Int,
-        val model: Node<Int>,
+        val model: Node<AudioEffectConstructor>,
         val view: FlowNode,
         val reason: Port.PortEvent.Reason
     ) : Event(outEventType)

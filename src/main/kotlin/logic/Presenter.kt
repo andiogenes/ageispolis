@@ -1,18 +1,32 @@
 package logic
 
+import config.Configuration
 import dataflow.Dataflow
 import dataflow.Node
+import effects.AudioEffectConstructor
 import logic.bindings.NodeBinding
 import ui.components.Port
 import ui.components.Root
 
-class Presenter(private val view: Root) {
-    private val model = Dataflow<Int>()
+/**
+ * Представитель приложения.
+ */
+class Presenter(view: Root) {
+    private val model = Dataflow<AudioEffectConstructor>()
+    private val audioSystem = AudioSystem().apply { run() }
 
     init {
         view.addEventListener(Root.nodeCreatedEventType) {
             if (it is Root.NodeCreatedEvent) {
-                val node = Node<Int>(it.node.inPortsCount, it.node.outPortsCount, it.node.parameters.size) { 0 }
+                val parameters = it.node.parameters.map { it.second }.toFloatArray()
+
+                val node = Node<AudioEffectConstructor>(
+                    it.node.inPortsCount,
+                    it.node.outPortsCount,
+                    parameters
+                ) { _ ->
+                    processors[it.node.title]!!.also { e -> audioSystem.add(e(parameters)) }
+                }
                 model.add(node)
 
                 val binding = NodeBinding(node, it.node)
@@ -20,6 +34,7 @@ class Presenter(private val view: Root) {
                 binding.addEventListener(NodeBinding.nodeRemovedType) { e ->
                     if (e is NodeBinding.NodeRemovedEvent) {
                         model.remove(e.model)
+                        updateCircuit()
                     }
                 }
 
@@ -33,6 +48,14 @@ class Presenter(private val view: Root) {
             }
         }
         view.addEventListener(Root.nodeRemovedEventType) { println(it) }
+    }
+
+    /**
+     * Обновляет активные обработчики.
+     */
+    private fun updateCircuit() {
+        audioSystem.clean()
+        model.makePipeline()(listOf())
     }
 
     /**
@@ -57,10 +80,12 @@ class Presenter(private val view: Root) {
             when (e.reason) {
                 Port.PortEvent.Reason.LINK_CREATED -> {
                     e.model.connectLeft(e.portIndex, previousOutEvent!!.model, previousOutEvent!!.portIndex)
+                    updateCircuit()
                 }
                 Port.PortEvent.Reason.LINK_REMOVED -> {
                     e.model.`in`[e.portIndex] = null
                     previousOutEvent!!.model.out[previousOutEvent!!.portIndex] = null
+                    updateCircuit()
                 }
                 else -> return
             }
@@ -83,10 +108,12 @@ class Presenter(private val view: Root) {
             when (e.reason) {
                 Port.PortEvent.Reason.LINK_CREATED -> {
                     e.model.connectRight(e.portIndex, previousInEvent!!.model, previousInEvent!!.portIndex)
+                    updateCircuit()
                 }
                 Port.PortEvent.Reason.LINK_REMOVED -> {
                     e.model.`out`[e.portIndex] = null
                     previousInEvent!!.model.`in`[previousInEvent!!.portIndex] = null
+                    updateCircuit()
                 }
                 else -> return
             }
@@ -97,11 +124,7 @@ class Presenter(private val view: Root) {
         }
     }
 
-    /**
-     * Минимум:
-     * 1. Добавление узлов с UI в модель V
-     * 2. Удаление узлов из UI и модели V
-     * 3. Пересчет цепи в модели
-     * 4. Как то замапить узлы UI с узлами модели V
-     */
+    companion object {
+        private val processors: Map<String, AudioEffectConstructor> = Configuration.processors.map { it.name to it.effect }.toMap()
+    }
 }

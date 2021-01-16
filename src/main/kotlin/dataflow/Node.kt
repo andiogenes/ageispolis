@@ -15,9 +15,9 @@ class Node<A>(
     outCapacity: Int = 1,
 
     /**
-     * Количество параметров.
+     * Параметры.
      */
-    parametersCount: Int,
+    val parameters: FloatArray = floatArrayOf(),
 
     /**
      * Вычислительная работа узла.
@@ -33,11 +33,6 @@ class Node<A>(
      * Выходящие порты.
      */
     val out: Array<Node<A>?> = Array(outCapacity) { null }
-
-    /**
-     * Параметры.
-     */
-    val parameters: FloatArray = FloatArray(parametersCount) { 0f }
 
     /**
      * Соединяет входящий порт [inPort] узла с выходящим портом [outPort] узла [source].

@@ -1,5 +1,7 @@
 package config
 
+import effects.AudioEffectConstructor
+
 /**
  * Конфигурация обработчика.
  */
@@ -27,5 +29,10 @@ data class Processor(
     /**
      * Параметры обработчика.
      */
-    val parameters: List<Pair<String, Float>>
+    val parameters: List<Pair<String, Float>>,
+
+    /**
+     * Эффект обработчика.
+     */
+    val effect: AudioEffectConstructor,
 )
