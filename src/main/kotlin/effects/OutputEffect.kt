@@ -9,7 +9,7 @@ import javax.sound.sampled.AudioFormat
 /**
  * Эффект, который выводит звук в стандартный звуковой выход.
  */
-class Player(params: FloatArray) : AudioEffect(params) {
+class OutputEffect(params: FloatArray) : AudioEffect(params) {
     private var gain = params[0]
 
     private val gainProcessor = GainProcessor(gain * 10.0)
@@ -25,5 +25,8 @@ class Player(params: FloatArray) : AudioEffect(params) {
         return true
     }
 
-    override fun processingFinished() {}
+    override fun processingFinished() {
+        gainProcessor.processingFinished()
+        player.processingFinished()
+    }
 }

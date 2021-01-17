@@ -1,6 +1,6 @@
 package config
 
-import effects.Player
+import effects.*
 
 /**
  * Объект, содержащий конфигурацию программы.
@@ -17,17 +17,24 @@ object Configuration {
             parameters {
                 "Volume" to 0.5f
             }
+
+            effect {
+                InputEffect(it)
+            }
         }
 
-        processor("Distortion") {
+        processor("Delay") {
             inPorts = 1
             outPorts = 1
-            fillColor = 0x66FF0000
+            fillColor = 0x66AA1E38
 
             parameters {
-                "Volume" to 0.5f
-                "Tone" to 0.5f
-                "Gain" to 0.5f
+                "Time" to 0.1f
+                "Decay" to 0.5f
+            }
+
+            effect {
+                DelayEffect(it)
             }
         }
 
@@ -40,7 +47,7 @@ object Configuration {
             }
 
             effect {
-                Player(it)
+                OutputEffect(it)
             }
         }
     }
