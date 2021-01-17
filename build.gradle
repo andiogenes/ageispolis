@@ -30,6 +30,15 @@ repositories {
     }
 }
 
+jar {
+    manifest {
+        attributes "Main-Class": "main.MainKt"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
 dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
 
