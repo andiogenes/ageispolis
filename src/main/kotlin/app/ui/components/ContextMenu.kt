@@ -10,7 +10,7 @@ import app.ui.utils.pointInBox
  *
  * @param menuItems Элементы меню.
  */
-class ContextMenu(private val menuItems: List<MenuItem>) : DisplayObject() {
+class ContextMenu(private val menuItems: List<MenuItem>) : DisplayObject(layer = 1) {
     /**
      * Элемент меню.
      *

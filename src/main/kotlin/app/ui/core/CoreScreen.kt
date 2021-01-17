@@ -12,12 +12,14 @@ class CoreScreen(private val root: DisplayObject) : Screen {
     private var y: Int = 0
 
     override fun onDraw(canvas: Canvas) {
-        DisplayObjectManager.objects.forEach { it.draw(canvas) }
+        DisplayObjectManager.objects.forEach { layer -> layer.forEach { it.draw(canvas) } }
     }
 
     override fun onMouseButton(button: Int, action: Int, mods: Int) {
-        DisplayObjectManager.objects.asReversed().forEach {
-            if (it.onMouseButton(x, y, button, action, mods)) return
+        DisplayObjectManager.objects.asReversed().forEach { layer ->
+            layer.asReversed().forEach {
+                if (it.onMouseButton(x, y, button, action, mods)) return
+            }
         }
     }
 
@@ -25,8 +27,10 @@ class CoreScreen(private val root: DisplayObject) : Screen {
         this.x = x
         this.y = y
 
-        DisplayObjectManager.objects.asReversed().forEach {
-            if (it.onMouseMove(x, y)) return
+        DisplayObjectManager.objects.asReversed().forEach { layer ->
+            layer.asReversed().forEach {
+                if (it.onMouseMove(x, y)) return
+            }
         }
     }
 

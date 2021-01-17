@@ -8,8 +8,8 @@ import events.EventDispatcher
 /**
  * Отображаемый объект. Узел графа сцены.
  */
-abstract class DisplayObject(private var parent: DisplayObject? = null) : EventDispatcher(), Cloneable {
-    init { DisplayObjectManager.addObject(this) }
+abstract class DisplayObject(private var parent: DisplayObject? = null, layer: Int = 0) : EventDispatcher(), Cloneable {
+    init { DisplayObjectManager.addObject(this, layer) }
 
     /**
      * Событие удаления объекта.

@@ -3,7 +3,7 @@ package app.ui.display
 /**
  * Отображаемый объект, который может иметь дочерние объекты.
  */
-abstract class DisplayObjectContainer(parent: DisplayObject? = null) : DisplayObject(parent) {
+abstract class DisplayObjectContainer(parent: DisplayObject? = null, layer: Int = 0) : DisplayObject(parent, layer) {
     private val children: ArrayList<DisplayObject> = arrayListOf()
 
     /**

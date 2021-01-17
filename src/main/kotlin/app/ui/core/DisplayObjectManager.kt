@@ -7,21 +7,21 @@ import app.ui.display.DisplayObject
  * для обеспечения эффективной работы с ними.
  */
 object DisplayObjectManager {
-    private val internalObjects: ArrayList<DisplayObject> = arrayListOf()
+    private val internalObjects: List<ArrayList<DisplayObject>> = List(2) { arrayListOf() }
 
     /**
      * Отображаемые объекты.
      */
-    val objects: List<DisplayObject>
+    val objects: List<List<DisplayObject>>
         get() = internalObjects
 
     /**
      * Добавляет объект в набор.
      */
-    fun addObject(obj: DisplayObject): Boolean = internalObjects.add(obj)
+    fun addObject(obj: DisplayObject, layer: Int = 0): Boolean = internalObjects[layer].add(obj)
 
     /**
      * Удаляет объект из набора.
      */
-    fun removeObject(obj: DisplayObject): Boolean = internalObjects.remove(obj)
+    fun removeObject(obj: DisplayObject, layer: Int = 0): Boolean = internalObjects[layer].remove(obj)
 }
