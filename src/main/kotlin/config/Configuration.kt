@@ -62,7 +62,7 @@ object Configuration {
             parameters {
                 "Volume" to 0.5f
                 "Gain" to 0.5f
-                "Tone" to 0.2f
+                "Tone" to 0.5f
             }
 
             effect {
