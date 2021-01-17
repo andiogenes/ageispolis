@@ -57,11 +57,12 @@ object Configuration {
         processor("Distortion") {
             inPorts = 1
             outPorts = 1
-            fillColor = 0x66666666
+            fillColor = 0x66E9742E
 
             parameters {
                 "Volume" to 0.5f
                 "Gain" to 0.5f
+                "Tone" to 0.2f
             }
 
             effect {
