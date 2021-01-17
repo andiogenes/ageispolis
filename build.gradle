@@ -32,7 +32,7 @@ repositories {
 
 jar {
     manifest {
-        attributes "Main-Class": "main.MainKt"
+        attributes "Main-Class": "com.andiogenes.main.MainKt"
     }
 
     from {
