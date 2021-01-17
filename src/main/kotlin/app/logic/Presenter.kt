@@ -1,12 +1,12 @@
-package logic
+package app.logic
 
 import config.Configuration
 import dataflow.Dataflow
 import dataflow.Node
 import effects.AudioEffectConstructor
-import logic.bindings.NodeBinding
-import ui.components.Port
-import ui.components.Root
+import app.logic.bindings.NodeBinding
+import app.ui.components.Port
+import app.ui.components.Root
 
 /**
  * Представитель приложения.

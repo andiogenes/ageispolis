@@ -1,6 +1,6 @@
-package ui.core
+package app.ui.core
 
-import ui.display.DisplayObject
+import app.ui.display.DisplayObject
 
 /**
  * Менеджер отображаемых объектов. Поддерживает перечень отображаемых объектов

@@ -2,7 +2,7 @@ package effects
 
 import be.tarsos.dsp.AudioEvent
 import be.tarsos.dsp.effects.FlangerEffect
-import logic.AudioSystem
+import app.logic.AudioSystem
 
 /**
  * Эффект "Фланжер". Напоминает "летящее" звучание.

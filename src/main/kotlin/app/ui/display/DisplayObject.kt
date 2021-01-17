@@ -1,9 +1,9 @@
-package ui.display
+package app.ui.display
 
 import org.jetbrains.skija.Canvas
-import ui.core.DisplayObjectManager
-import ui.events.Event
-import ui.events.EventDispatcher
+import app.ui.core.DisplayObjectManager
+import events.Event
+import events.EventDispatcher
 
 /**
  * Отображаемый объект. Узел графа сцены.

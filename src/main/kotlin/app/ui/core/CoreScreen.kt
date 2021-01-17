@@ -1,8 +1,8 @@
-package ui.core
+package app.ui.core
 
 import org.jetbrains.skija.Canvas
 import skija.Screen
-import ui.display.DisplayObject
+import app.ui.display.DisplayObject
 
 /**
  * Главный набор обработчиков, инкапсулирующий работу с графом сцены.

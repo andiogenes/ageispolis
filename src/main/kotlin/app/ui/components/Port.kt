@@ -1,12 +1,12 @@
-package ui.components
+package app.ui.components
 
 import org.jetbrains.skija.Canvas
 import org.jetbrains.skija.Paint
 import org.jetbrains.skija.PaintMode
 import org.lwjgl.glfw.GLFW
-import ui.display.DisplayObject
-import ui.events.Event
-import utils.pointInCircle
+import app.ui.display.DisplayObject
+import events.Event
+import app.ui.utils.pointInCircle
 
 /**
  * Компонент порта узла потока данных.

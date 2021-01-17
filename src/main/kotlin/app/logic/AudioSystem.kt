@@ -1,4 +1,4 @@
-package logic
+package app.logic
 
 import be.tarsos.dsp.WaveformSimilarityBasedOverlapAdd
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory

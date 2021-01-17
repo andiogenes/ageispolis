@@ -2,7 +2,7 @@ package effects
 
 import be.tarsos.dsp.AudioEvent
 import be.tarsos.dsp.filters.LowPassSP
-import logic.AudioSystem
+import app.logic.AudioSystem
 import kotlin.math.abs
 import kotlin.math.exp
 

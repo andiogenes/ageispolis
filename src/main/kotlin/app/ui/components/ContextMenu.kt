@@ -1,9 +1,9 @@
-package ui.components
+package app.ui.components
 
 import org.jetbrains.skija.*
 import org.lwjgl.glfw.GLFW
-import ui.display.DisplayObject
-import utils.pointInBox
+import app.ui.display.DisplayObject
+import app.ui.utils.pointInBox
 
 /**
  * Выпадающее меню.

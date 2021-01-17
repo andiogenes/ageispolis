@@ -1,4 +1,4 @@
-package ui.display
+package app.ui.display
 
 /**
  * Отображаемый объект, который может иметь дочерние объекты.

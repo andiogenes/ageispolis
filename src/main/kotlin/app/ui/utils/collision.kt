@@ -1,4 +1,4 @@
-package utils
+package app.ui.utils
 
 import kotlin.math.sqrt
 

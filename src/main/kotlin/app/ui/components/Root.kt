@@ -1,13 +1,12 @@
-package ui.components
+package app.ui.components
 
 import config.Configuration
-import logic.Presenter
+import app.logic.Presenter
 import org.jetbrains.skija.Canvas
 import org.jetbrains.skija.Paint
 import org.lwjgl.glfw.GLFW
-import ui.display.DisplayObject
-import ui.display.DisplayObjectContainer
-import ui.events.Event
+import app.ui.display.DisplayObjectContainer
+import events.Event
 
 /**
  * Корневой компонент приложения.

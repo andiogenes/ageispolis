@@ -1,7 +1,7 @@
 package main
 
 import app.runApp
-import ui.components.Root
+import app.ui.components.Root
 
 
 fun main() {

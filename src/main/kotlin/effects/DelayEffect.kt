@@ -2,7 +2,7 @@ package effects
 
 import be.tarsos.dsp.AudioEvent
 import be.tarsos.dsp.effects.DelayEffect
-import logic.AudioSystem
+import app.logic.AudioSystem
 
 /**
  * Эффект "задержки" - чёткие затухающие повторы (эхо) исходного сигнала.

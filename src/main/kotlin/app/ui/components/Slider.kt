@@ -1,10 +1,10 @@
-package ui.components
+package app.ui.components
 
 import org.jetbrains.skija.*
 import org.lwjgl.glfw.GLFW
-import ui.display.DisplayObject
-import ui.events.Event
-import utils.pointInBox
+import app.ui.display.DisplayObject
+import events.Event
+import app.ui.utils.pointInBox
 import kotlin.math.abs
 import kotlin.properties.Delegates.observable
 

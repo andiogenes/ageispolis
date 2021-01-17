@@ -1,9 +1,9 @@
-package ui.components
+package app.ui.components
 
 import org.jetbrains.skija.*
 import org.lwjgl.glfw.GLFW
-import ui.display.DisplayObject
-import ui.events.Event
+import app.ui.display.DisplayObject
+import events.Event
 
 /**
  * Слой отображения дуг между узлами потока данных.

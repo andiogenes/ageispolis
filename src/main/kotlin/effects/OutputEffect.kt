@@ -3,7 +3,7 @@ package effects
 import be.tarsos.dsp.AudioEvent
 import be.tarsos.dsp.GainProcessor
 import be.tarsos.dsp.io.jvm.AudioPlayer
-import logic.AudioSystem
+import app.logic.AudioSystem
 import javax.sound.sampled.AudioFormat
 
 /**

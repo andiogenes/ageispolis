@@ -4,9 +4,8 @@ import skija.SkijaWindow
 import org.jetbrains.skija.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
-import skija.Screen
-import ui.core.CoreScreen
-import ui.display.DisplayObject
+import app.ui.core.CoreScreen
+import app.ui.display.DisplayObject
 
 /**
  * Запускает приложение.
@@ -50,5 +49,5 @@ fun prepareBounds(): IRect {
         maxOf(0, (vidMode.height() - height) / 2),
         width,
         height
-    )!!
+    )
 }

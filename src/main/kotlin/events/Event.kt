@@ -1,4 +1,4 @@
-package ui.events
+package events
 
 /**
  * Слушатель события.

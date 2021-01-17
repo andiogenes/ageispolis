@@ -1,12 +1,12 @@
-package logic.bindings
+package app.logic.bindings
 
 import dataflow.Node
 import effects.AudioEffectConstructor
-import ui.components.FlowNode
-import ui.components.Port
-import ui.display.DisplayObject
-import ui.events.Event
-import ui.events.EventDispatcher
+import app.ui.components.FlowNode
+import app.ui.components.Port
+import app.ui.display.DisplayObject
+import events.Event
+import events.EventDispatcher
 
 /**
  * Связывание модели и представления узла потока данных.
