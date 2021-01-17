@@ -54,6 +54,21 @@ object Configuration {
             }
         }
 
+        processor("Distortion") {
+            inPorts = 1
+            outPorts = 1
+            fillColor = 0x66666666
+
+            parameters {
+                "Volume" to 0.5f
+                "Gain" to 0.5f
+            }
+
+            effect {
+                DistortionEffect(it)
+            }
+        }
+
         processor("Output") {
             inPorts = 1
             outPorts = 0
