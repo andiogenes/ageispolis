@@ -38,6 +38,22 @@ object Configuration {
             }
         }
 
+        processor("Flanger") {
+            inPorts = 1
+            outPorts = 1
+            fillColor = 0x66B25BA2
+
+            parameters {
+                "Length" to 0.1f
+                "Wet" to 0.5f
+                "Frequency" to 0.2f
+            }
+
+            effect {
+                FlangerEffect(it)
+            }
+        }
+
         processor("Output") {
             inPorts = 1
             outPorts = 0
