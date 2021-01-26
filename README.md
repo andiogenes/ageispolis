@@ -4,7 +4,7 @@
 ## Сборка и запуск
 ------------------
 ```bash
-git clone https://github.com/andiogenes/patterns-project.git guitar_processor
+git clone https://github.com/andiogenes/ageispolis.git guitar_processor
 cd guitar_processor
 ./gradlew build
 cd build/libs
