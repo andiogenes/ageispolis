@@ -18,3 +18,7 @@ java -jar guitar_processor_X.jar
 ![Слайдеры](https://github.com/andiogenes/patterns-project/blob/media/images/node_editor_slider.gif)
 
 ![Соединения](https://raw.githubusercontent.com/andiogenes/patterns-project/media/images/node_editor_edges_2.gif)
+
+## Итоговый результат
+---------------------
+![Результат](https://raw.githubusercontent.com/andiogenes/patterns-project/media/images/node_editor_result.jpg)
